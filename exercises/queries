@@ -1,0 +1,240 @@
+select *
+from character;
+
+select *
+from power;
+
+select name
+from power;
+
+select name as superpower
+from power;
+
+select name, headquarters
+from team;
+
+select name as super_friends, headquarters as super_location
+from team;
+
+select superhero.name, superhero.energy, superhero.intelligence
+from character as superhero;
+
+select name,
+       (c.durability * c.energy * c.fighting * c.intelligence * c.speed * c.strength) as power_level
+from character as c;
+
+select *
+from character
+where secret_identity = true;
+
+-----
+
+select *
+from character
+where speed > 4;
+
+select *
+from character
+where (speed > 4)
+  and (durability <= 3);
+
+select *
+from character
+where (hair = 'Brown')
+   or (eyes = 'Brown');
+
+select *
+from character
+where secret_identity = false;
+
+select *
+from team
+where headquarters = 'New York';
+
+select *
+from team
+where founded_on > '1984-07-04';
+
+select *
+from team
+where (founded_on > '1984-07-04')
+  and (headquarters = 'New York');
+
+select *
+from team
+where headquarters != 'New York';
+
+select *
+from team
+where (name = 'Kree')
+   or (name = 'Skrulls');
+
+select *
+from team
+where headquarters is null;
+
+select *
+from team
+where headquarters is not null;
+
+select *
+from team
+where (name <= 'Defenders')
+
+select *
+from character as c
+where (c.durability * c.energy * c.fighting * c.intelligence * c.speed * c.strength) > 9000;
+
+select *
+from character
+where (name >= 'X')
+  and secret_identity;
+
+select *
+from team
+where (founded_on >= '1980-01-01')
+  and (founded_on <= '1999-12-31')
+
+select *
+from team
+where (
+        (founded_on >= '1970-01-01') and (founded_on <= '1979-12-31') or
+        (founded_on >= '2010-01-01') and (founded_on <= '2019-12-31')
+    )
+  and (headquarters is null);
+
+
+----
+
+select *
+from character
+where (name like 'Captain%');
+
+select *
+from character
+where (name like '%Man');
+
+select *
+from character
+where (hair like 'Bl%')
+  and (eyes like 'Bl%');
+
+select *
+from power
+where name like '%ion%';
+
+
+select *
+from power
+where name like '_____ %';
+
+select *
+from power
+where name like '% _____';
+
+select *
+from power
+where name like '%(%)%';
+
+select *
+from character
+where (name like '___ %')
+   or (name like '% ___');
+
+select *
+from character
+where (
+              ((name like '___ %') or (name like '% ___')) and
+              (hair = 'Black')
+          );
+
+select *
+from character
+where (
+              ((name like '___ %') or (name like '% ___')) and
+              ((hair = 'Black') or (eyes = 'Black'))
+          );
+
+select *
+from character
+where (
+              ((name like '___ %') or (name like '% ___')) and
+              (
+                      ((hair = 'Black') or (eyes = 'Black')) or
+                      ((hair = 'Blonde') and (eyes = 'Blue'))
+                  )
+          );
+
+---
+
+select c.name, a.name
+from character as c
+         join alias a on c.id = a.character_id;
+
+select c.name, a.name
+from character as c
+         join alias a on c.id = a.character_id
+where (c.name like '________%')
+  and (a.name like '____');
+
+select c.name, p.id
+from character c
+         join character_power cp on c.id = cp.power_id
+         join power p on cp.power_id = p.id;
+
+select c.name, p.name
+from character c
+         join character_power cp on c.id = cp.power_id
+         join power p on cp.power_id = p.id;
+
+select c.name, p.name
+from character c
+         join character_power cp on c.id = cp.character_id
+         join power p on cp.power_id = p.id
+where p.name NOT like '%Super%';
+
+select c.name, p.name
+from character c
+         join character_power cp on c.id = cp.character_id
+         join power p on cp.power_id = p.id
+where (
+              (p.name NOT like '%Super%') and
+              (c.strength > 5)
+          );
+
+select c.name, a.name
+from character c
+         left join alias a on c.id = a.character_id;
+
+select c.name, a.name
+from character c
+         left join alias a on c.id = a.character_id
+where a.name is null;
+
+select c.name, a.name
+from character c
+         left join alias a on c.id = a.character_id
+where (a.name is null)
+  and (c.secret_identity);
+
+select c.name, t.name
+from character c
+         left join team_character tc on c.id = tc.character_id
+         left join team t on tc.team_id = t.id
+where (t.name is null);
+
+select c.name, t.name, p.name
+from character c
+         join team_character tc on c.id = tc.character_id
+         join team t on tc.team_id = t.id
+         join character_power cp on c.id = cp.character_id
+         join power p on cp.power_id = p.id
+where p.name = 'Flight'
+  and t.headquarters = 'New York'
+
+select a.name, c.name, c.secret_identity, t.name, tc.is_active
+from character c
+         left join alias a on c.id = a.character_id
+         left join team_character tc on c.id = tc.character_id
+         left join team t on tc.team_id = t.id
+where (c.secret_identity) and (a.name is null) and (t.name = 'X-Men') and (tc.is_active);
